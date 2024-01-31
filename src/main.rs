@@ -13,15 +13,24 @@ use View::view::{show_buttons, show_sys_info};
 use std::fs;
 // use std::env::consts::EXE_EXTENSION;
 
-#[derive(Default)]
+// #[derive(Default)]
 struct MyApp {
-    download_target: String,
     allowed_to_close: bool,
-    show_confirmation_dialog: bool,
     allow_to_download: bool,
-    network_information: bool,
+    available_version: String,
 
     update_list: Vec<String>,
+}
+
+impl Default for MyApp {
+    fn default() -> Self {
+        Self {
+            allow_to_download: true,
+            allowed_to_close: true,
+            available_version: String::from("0.1.0"),
+            update_list: Vec::new(),
+        }
+    }
 }
 
 fn main() {
@@ -39,10 +48,6 @@ fn main() {
 }
 
 impl eframe::App for MyApp {
-    fn on_close_event(&mut self) -> bool {
-        self.show_confirmation_dialog = true;
-        self.allowed_to_close
-    }
 
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
 
@@ -51,7 +56,7 @@ impl eframe::App for MyApp {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.horizontal(|ui| {
                 if ui.add(egui::Button::new("Check updates")).clicked() {
-                    check_status();
+                    check_status(&mut self.available_version);
                 }
 
                 if ui.add(egui::Button::new("Donwload updates")).clicked() {
@@ -75,10 +80,12 @@ impl eframe::App for MyApp {
                 ui.separator();
                 ui.add(egui::Label::new(APP_VERSION));
             });
+
+            let new_release = "New: ".to_owned() + &self.available_version;
+
+            ui.add(egui::Label::new(new_release));
         });
 
-        if self.show_confirmation_dialog {
-            frame.close();
-        }
+     
     }
 }

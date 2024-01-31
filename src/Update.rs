@@ -2,6 +2,7 @@
 
 pub mod update {
 
+    use reqwest::header::STRICT_TRANSPORT_SECURITY;
     // use crate::Update::cargo_crate_version;
     use self_update::cargo_crate_version;
     use self_update::self_replace;
@@ -46,7 +47,7 @@ pub mod update {
         }
     }
 
-    pub fn check_status() -> Result<(), Box<dyn (::std::error::Error)>> {
+    pub fn check_status(new_version: &mut String) -> Result<(), Box<dyn (::std::error::Error)>> {
         let status = self_update::backends::github::Update::configure()
             .repo_owner("quied")
             .repo_name("rs-download-manager")
@@ -56,6 +57,11 @@ pub mod update {
             .build()?
             .update()?;
         println!("Update status: `{}`!", status.version());
+
+        *new_version = String::from(status.version());
+        dbg!(new_version);
+        print!("123");
+
         Ok(())
     }
 
