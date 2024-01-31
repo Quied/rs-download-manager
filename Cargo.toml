@@ -17,3 +17,4 @@ futures = "0.3"
 reqwest = { version = "0.11", features = ["json"] }
 tokio = { version = "1", features = ["full"] }
 tempfile = "3.3.0"
+self_update = "0.39.0"
