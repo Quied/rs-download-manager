@@ -6,7 +6,7 @@ use sysinfo::{NetworkExt, NetworksExt, ProcessExt, System, SystemExt};
 mod Update;
 mod View;
 
-use Update::update::check_status;
+use Update::update::{check_status, check_rel_list};
 
 use egui::widgets::ProgressBar;
 use View::view::{show_buttons, show_sys_info};
@@ -20,7 +20,6 @@ struct MyApp {
     network_information: bool,
 
     update_list: Vec<String>,
-
 }
 
 fn main() {
@@ -45,28 +44,26 @@ impl eframe::App for MyApp {
 
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            
-            
             ui.horizontal(|ui| {
                 if ui.add(egui::Button::new("Check updates")).clicked() {
                     check_status();
-                }           
+                }
 
-                if ui.add(egui::Button::new("Donwload updates")).clicked(){
+                if ui.add(egui::Button::new("Donwload updates")).clicked() {
                     // println!("")
+                }
+
+                if ui.add(egui::Button::new("Realeses")).clicked(){
+                    check_rel_list();
                 }
             });
 
             ui.separator();
 
-
             ui.vertical(|ui| {
                 ui.add(egui::Label::new("List updates:"));
             });
-            
         });
-
-        
 
         if self.show_confirmation_dialog {
             frame.close();
