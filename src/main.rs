@@ -18,6 +18,9 @@ struct MyApp {
     show_confirmation_dialog: bool,
     allow_to_download: bool,
     network_information: bool,
+
+    update_list: Vec<String>,
+
 }
 
 fn main() {

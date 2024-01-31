@@ -10,8 +10,8 @@ pub mod update {
 
    pub fn check_status() -> Result<(), Box<dyn(::std::error::Error)>> {
         let status = self_update::backends::github::Update::configure()
-            .repo_owner("quied")
-            .repo_name("rs-download-manager")
+            .repo_owner("jaemk")
+            .repo_name("self_update")
         .bin_name("github")
         .show_download_progress(true)
         .current_version(cargo_crate_version!())
@@ -20,7 +20,7 @@ pub mod update {
     println!("Update status: `{}`!", status.version());
     Ok(())
     }
-  
+ 
    pub fn update() -> Result<(), Box<dyn(::std::error::Error)>> {
         let status = self_update::backends::github::Update::configure()
             .repo_owner("jaemk")
