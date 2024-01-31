@@ -43,6 +43,9 @@ impl eframe::App for MyApp {
     }
 
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+
+        let APP_VERSION = "Current version 0.1.0".to_owned();
+
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.horizontal(|ui| {
                 if ui.add(egui::Button::new("Check updates")).clicked() {
@@ -62,6 +65,9 @@ impl eframe::App for MyApp {
 
             ui.vertical(|ui| {
                 ui.add(egui::Label::new("List updates:"));
+
+                ui.separator();
+                ui.add(egui::Label::new(APP_VERSION));
             });
         });
 
