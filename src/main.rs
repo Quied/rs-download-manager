@@ -6,10 +6,12 @@ use sysinfo::{NetworkExt, NetworksExt, ProcessExt, System, SystemExt};
 mod Update;
 mod View;
 
-use Update::update::{check_status, check_rel_list};
+use Update::update::{check_rel_list, check_status, replace_itself};
 
 use egui::widgets::ProgressBar;
 use View::view::{show_buttons, show_sys_info};
+use std::fs;
+// use std::env::consts::EXE_EXTENSION;
 
 #[derive(Default)]
 struct MyApp {
@@ -58,6 +60,10 @@ impl eframe::App for MyApp {
 
                 if ui.add(egui::Button::new("Realeses")).clicked(){
                     check_rel_list();
+                }
+
+                if ui.add(egui::Button::new("Replace")).clicked(){
+                    replace_itself();
                 }
             });
 

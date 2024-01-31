@@ -5,6 +5,7 @@ pub mod update {
     // use crate::Update::cargo_crate_version;
     use self_update::cargo_crate_version;
     use self_update::self_replace;
+    use std::env::consts::EXE_EXTENSION;
     // let bin_name = std::path::PathBuf::from("this_temp_name");
   
     pub fn check_rel_list() -> Result<(), Box<dyn (::std::error::Error)>> {
@@ -20,6 +21,29 @@ pub mod update {
         println!("{:#?}\n", releases);
         
         Ok(())
+    }
+
+    pub fn replace_itself(){
+
+        let APP_NAME = "Achernar".to_owned();
+
+        let exe = std::env::current_exe().unwrap();
+        let new_executable = std::fs::read_link(exe.clone())
+            .unwrap_or(exe)
+            .with_file_name(APP_NAME.clone())
+            .with_extension(EXE_EXTENSION);
+    
+        if !new_executable.is_file() {
+            eprintln!("hello does not exist, run cargo build --example hello first.");
+            std::process::exit(1);
+        }
+    
+        println!("Next time I run, I am the {} executable", APP_NAME);
+        self_replace::self_replace(&new_executable).unwrap();
+    
+        if std::env::var("FORCE_EXIT").ok().as_deref() == Some("1") {
+            std::process::exit(0);
+        }
     }
 
     pub fn check_status() -> Result<(), Box<dyn (::std::error::Error)>> {
