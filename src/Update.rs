@@ -6,9 +6,10 @@ pub mod update {
     // use crate::Update::cargo_crate_version;
     use self_update::cargo_crate_version;
     use self_update::self_replace;
+    use self_update::update::Release;
     use std::env::consts::EXE_EXTENSION;
     // let bin_name = std::path::PathBuf::from("this_temp_name");
-  
+
     pub fn check_rel_list() -> Result<(), Box<dyn (::std::error::Error)>> {
         let mut builds = self_update::backends::github::ReleaseList::configure();
         println!("checking on realeses...");
@@ -17,15 +18,14 @@ pub mod update {
         builds.repo_owner("jaemk");
 
         let releases = builds.repo_name("self_update").build()?.fetch()?;
-//        let releases = builds.repo_name("self_updates").build()?.fetch()?;
+        //        let releases = builds.repo_name("self_updates").build()?.fetch()?;
         println!("releases: ");
         println!("{:#?}\n", releases);
-        
+
         Ok(())
     }
 
-    pub fn replace_itself(){
-
+    pub fn replace_itself() {
         let APP_NAME = "Achernar".to_owned();
 
         let exe = std::env::current_exe().unwrap();
@@ -33,21 +33,24 @@ pub mod update {
             .unwrap_or(exe)
             .with_file_name(APP_NAME.clone())
             .with_extension(EXE_EXTENSION);
-    
+
         if !new_executable.is_file() {
             eprintln!("hello does not exist, run cargo build --example hello first.");
             std::process::exit(1);
         }
-    
+
         println!("Next time I run, I am the {} executable", APP_NAME);
         self_replace::self_replace(&new_executable).unwrap();
-    
+
         if std::env::var("FORCE_EXIT").ok().as_deref() == Some("1") {
             std::process::exit(0);
         }
     }
 
-    pub fn check_status(new_version: &mut String) -> Result<(), Box<dyn (::std::error::Error)>> {
+    pub fn check_status(
+        new_version: &mut String,
+        is_new_upd: &mut bool,
+    ) -> Result<(), Box<dyn (::std::error::Error)>> {
         let status = self_update::backends::github::Update::configure()
             .repo_owner("quied")
             .repo_name("rs-download-manager")
@@ -59,10 +62,29 @@ pub mod update {
         println!("Update status: `{}`!", status.version());
 
         *new_version = String::from(status.version());
-        dbg!(new_version);
-        print!("123");
+        *is_new_upd = true;
 
         Ok(())
+    }
+
+    pub fn get_releases_list() -> Result<(Vec<Release>), Box<dyn (::std::error::Error)>> {
+        let releases = self_update::backends::github::ReleaseList::configure()
+            .repo_owner("quied")
+            .repo_name("rs-download-manager")
+            .build()?
+            .fetch()?;
+
+        println!("found releases:");
+        println!("{:#?}\n", releases);
+        println!("{:#?}\n", releases[0].name);
+
+        let mut st = Some("hello world");
+
+        // let asset = releases[0]
+        // .asset_for(&self_update::get_target(), st).unwrap();
+
+        // println!("FIRST RELEASE {}", asset.clone().);
+        Ok((releases))
     }
 
     pub fn update() -> Result<(), Box<dyn (::std::error::Error)>> {
