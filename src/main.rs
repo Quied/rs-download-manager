@@ -6,6 +6,8 @@ use webbrowser;
 mod Update;
 mod View;
 
+use Update::update::get_release_this;
+use Update::update::test_upd;
 use Update::update::update_current;
 use Update::update::{check_rel_list, check_status, get_releases_list, replace_itself};
 
@@ -23,13 +25,6 @@ struct MyApp {
     update_list: Vec<String>,
     all_releases: Vec<Release>,
 }
-
-impl ReleaseUpdate for MyApp {
-    fn current_version(&self) -> String {
-        
-    }
-}
-
 
 impl Default for MyApp {
     fn default() -> Self {
@@ -63,7 +58,6 @@ impl eframe::App for MyApp {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
         let APP_VERSION = "Current version 0.1.0".to_owned();
 
-
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.horizontal(|ui| {
                 if ui.add(egui::Button::new("Check updates")).clicked() {
@@ -75,7 +69,8 @@ impl eframe::App for MyApp {
                 }
 
                 if ui.add(egui::Button::new("Donwload updates")).clicked() {
-                    // println!("")
+                    // get_release_this();
+                    test_upd();
                 }
 
                 if ui.add(egui::Button::new("Realeses")).clicked() {
@@ -110,7 +105,7 @@ impl eframe::App for MyApp {
                 ui.separator();
 
                 // === SHOW VERSION ===
-                if !self.all_releases.is_empty() { 
+                if !self.all_releases.is_empty() {
                     let now_release = &self.all_releases.last();
                     ui.add(egui::Label::new(&now_release.unwrap().version));
                 }
