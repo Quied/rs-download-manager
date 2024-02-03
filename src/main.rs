@@ -95,7 +95,7 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
 
     // let tmp_tarball = ::std::fs::File::open(&tmp_tarball_path)?;
     // let tmp_tarball = ::std::fs::File::open(file_path)?;
-    let tmp_tarball = ::std::fs::File::create(file_path)?;
+    let tmp_tarball = ::std::fs::File::create(&file_path)?;
 
     println!("[tmp_tarball] {:?}", tmp_tarball);
     println!("4");
@@ -106,13 +106,17 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("5");
 
+    let extract_target = std::path::Path::new(&file_path);
     let bin_name = std::path::PathBuf::from("self_update_bin");
 
+
+
+    println!("[extract_target]: {:?}", extract_target);
     println!("[bin_name]: {:?}", bin_name);
     println!("6");
 
     //self_update::Extract::from_source(&tmp_tarball_path)
-    self_update::Extract::from_source(&tmp_tarball_path)
+    self_update::Extract::from_source(&extract_target)
         .archive(self_update::ArchiveKind::Plain(Some(
             self_update::Compression::Gz,
         )))
@@ -121,6 +125,7 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
         println!("7");
 
     let new_exe = tmp_dir.path().join(bin_name);
+    // println!("[new_exe]: {:?}", new_exe);
     self_replace::self_replace(new_exe)?;
 
 
