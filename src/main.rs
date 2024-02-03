@@ -107,12 +107,15 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
     println!("5");
 
     let extract_target = std::path::Path::new(&file_path);
+    let file_for_save = std::path::Path::new("./static_dir/");
     let bin_name = std::path::PathBuf::from("self_update_bin");
-
 
 
     println!("[extract_target]: {:?}", extract_target);
     println!("[bin_name]: {:?}", bin_name);
+    println!("[tmp_dir]: {:?}", tmp_dir.path());
+    println!("[file_for_save]: {:?}", file_for_save);
+    
     println!("6");
 
     //self_update::Extract::from_source(&tmp_tarball_path)
@@ -120,12 +123,14 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
         .archive(self_update::ArchiveKind::Plain(Some(
             self_update::Compression::Gz,
         )))
-        .extract_file(&tmp_dir.path(), &bin_name)?;
+        //.extract_file(&tmp_dir.path(), &bin_name)?;
+        .extract_file(&file_for_save, &bin_name)?;
 
         println!("7");
 
-    let new_exe = tmp_dir.path().join(bin_name);
-    // println!("[new_exe]: {:?}", new_exe);
+    //let new_exe = tmp_dir.path().join(bin_name);
+    let new_exe = file_for_save.join(bin_name);
+    println!("[new_exe]: {:?}", new_exe);
     self_replace::self_replace(new_exe)?;
 
 
