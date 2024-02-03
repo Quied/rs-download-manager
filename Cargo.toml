@@ -1,0 +1,41 @@
+[package]
+name = "installer-rs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+self-replace = "1.3.7"
+self_update = "0.39.0"
+
+tempfile = "3"
+flate2 = { version = "1", optional = true }
+either = { version = "1", optional = true }
+tar = { version = "0.4", optional = true }
+reqwest = { version = "0.11", default-features = false, features = ["blocking", "json"] }
+zip = { version = "0.6", default-features = false, features = ["time"], optional = true }
+zipsign-api = { version = "0.1.0-a.3", default-features = false, optional = true }
+hyper = "1.1.0"
+indicatif = "0.17"
+quick-xml = "0.31.0"
+urlencoding = "2.1"
+serde_json = "1"
+
+[features]
+# archive-tar = []
+# archive-zip = []
+# archive-tar = ["tar", "zipsign-api?/verify-tar"]
+
+default = ["reqwest/default-tls"]
+archive-zip = ["zip", "zipsign-api?/verify-zip"]
+compression-zip-bzip2 = ["archive-zip", "zip/bzip2"]
+compression-zip-deflate = ["archive-zip", "zip/deflate"]
+archive-tar = ["tar", "zipsign-api?/verify-tar"]
+compression-flate2 = ["archive-tar", "flate2", "either"]
+rustls = ["reqwest/rustls-tls"]
+signatures = ["dep:zipsign-api"]
+
+[package.metadata.docs.rs]
+# Whether to pass `--all-features` to Cargo (default: false)
+all-features = true
