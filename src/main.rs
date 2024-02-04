@@ -5,6 +5,8 @@ use std::error;
 use std::io::{stdin, Read};
 use std::{fs, io};
 
+// use flate2::Compression;
+// use flate2::write::ZlibEncoder;
 
 use self_update::backends::github::ReleaseList;
 use self_update::{Download, Extract};
@@ -12,6 +14,8 @@ use std::fs::{set_permissions, File, OpenOptions};
 use std::path::Path;
 use std::thread::Builder;
 use tempfile::tempdir_in;
+
+mod uncompress;
 
 // use tar::Archive;
 
@@ -21,10 +25,10 @@ use tempfile::tempdir_in;
 // #[cfg(feature = "archive-tar")]
 fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
     let releases = self_update::backends::github::ReleaseList::configure()
-        .repo_owner("jaemk")
-        .repo_name("self_update") 
-        //  .repo_owner("quied")
-        // .repo_name("rs-download-manager")
+        // .repo_owner("jaemk")
+        // .repo_name("self_update")
+        .repo_owner("quied")
+        .repo_name("rs-download-manager")
         .build()?
         .fetch()?;
     println!("found releases:");
@@ -40,9 +44,9 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
     let tmp_dir = tempfile::Builder::new()
         .prefix("new_dir")
         .tempdir_in(::std::env::current_dir()?)?;
-    
-    let static_dir = std::path::Path::new("/temp/");
 
+    let static_dir = std::path::Path::new("/temp/");
+    
     println!("2");
     println!("[tmp_dir] {:?}", tmp_dir);
 
@@ -71,8 +75,7 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
-
-
+    
     let tmp_tarball_path = tmp_dir.path().join(&asset.name);
     //let tmp_tarball_path = dir_name.path().join(&asset.name);
 
@@ -108,14 +111,13 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
 
     let extract_target = std::path::Path::new(&file_path);
     let file_for_save = std::path::Path::new("./static_dir/");
-    let bin_name = std::path::PathBuf::from("self_update_bin");
-
+    let bin_name = std::path::PathBuf::from("target_bin_file");
 
     println!("[extract_target]: {:?}", extract_target);
     println!("[bin_name]: {:?}", bin_name);
     println!("[tmp_dir]: {:?}", tmp_dir.path());
     println!("[file_for_save]: {:?}", file_for_save);
-    
+
     println!("6");
 
     //self_update::Extract::from_source(&tmp_tarball_path)
@@ -126,15 +128,15 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
         //.extract_file(&tmp_dir.path(), &bin_name)?;
         .extract_file(&file_for_save, &bin_name)?;
 
-        println!("7");
+    println!("7");
 
     //let new_exe = tmp_dir.path().join(bin_name);
     let new_exe = file_for_save.join(bin_name);
     println!("[new_exe]: {:?}", new_exe);
     self_replace::self_replace(new_exe)?;
 
-
     println!("end");
+    uncompress::Uncompresser::try_decompress_tar("target".to_owned());
     Ok(())
 }
 
@@ -181,7 +183,5 @@ fn update_this() -> Result<(), Box<dyn (std::error::Error)>> {
 }
 
 fn main() {
-    println!("Hello, world!");
-
     let _ = update_this();
 }
