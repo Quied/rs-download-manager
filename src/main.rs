@@ -6,7 +6,7 @@ use webbrowser;
 mod Update;
 mod View;
 
-use Update::update::{check_updates, download_updates};
+use Update::update::{check_updates, replace_itself};
 
 use egui::widgets::ProgressBar;
 use std::fs;
@@ -63,8 +63,8 @@ impl eframe::App for MyApp {
                     let _ = check_updates();
                 }
 
-                if ui.add(egui::Button::new("Download updates")).clicked() {
-                    let _ = download_updates();
+                if ui.add(egui::Button::new("Replace itself")).clicked() {
+                    let _ = replace_itself();
                 }
             });
 

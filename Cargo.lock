@@ -15,10 +15,9 @@ dependencies = [
  "futures",
  "hyper 1.1.0",
  "indicatif",
- "quick-xml 0.31.0",
+ "quick-xml",
  "reqwest",
  "self-replace",
- "self_update",
  "serde_json",
  "tar",
  "tempfile",
@@ -2619,15 +2618,6 @@ dependencies = [
 
 [[package]]
 name = "quick-xml"
-version = "0.23.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "11bafc859c6815fbaffbbbf4229ecb767ac913fecb27f9ad4343662e9ef099ea"
-dependencies = [
- "memchr",
-]
-
-[[package]]
-name = "quick-xml"
 version = "0.31.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1004a344b30a54e2ee58d66a71b32d2db2feb0a31f9a2d302bf0536f15de2a33"
@@ -2976,25 +2966,6 @@ dependencies = [
  "fastrand 1.9.0",
  "tempfile",
  "windows-sys 0.48.0",
-]
-
-[[package]]
-name = "self_update"
-version = "0.39.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1a34ad8e4a86884ab42e9b8690e9343abdcfe5fa38a0318cfe1565ba9ad437b4"
-dependencies = [
- "hyper 0.14.23",
- "indicatif",
- "log",
- "quick-xml 0.23.1",
- "regex",
- "reqwest",
- "self-replace",
- "semver",
- "serde_json",
- "tempfile",
- "urlencoding",
 ]
 
 [[package]]
@@ -3825,7 +3796,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "63b3a62929287001986fb58c789dce9b67604a397c15c611ad9f747300b6c283"
 dependencies = [
  "proc-macro2",
- "quick-xml 0.31.0",
+ "quick-xml",
  "quote",
 ]
 
