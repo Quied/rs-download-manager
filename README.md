@@ -1,1 +1,1 @@
-cargo build --release --features "tar, flate2"
+cargo build --release --features tar,flate2

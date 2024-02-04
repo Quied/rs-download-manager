@@ -15,7 +15,6 @@ use std::path::Path;
 use std::thread::Builder;
 use tempfile::tempdir_in;
 
-mod uncompress;
 
 // use tar::Archive;
 
@@ -46,7 +45,7 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
         .tempdir_in(::std::env::current_dir()?)?;
 
     let static_dir = std::path::Path::new("/temp/");
-    
+
     println!("2");
     println!("[tmp_dir] {:?}", tmp_dir);
 
@@ -75,7 +74,7 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
-    
+
     let tmp_tarball_path = tmp_dir.path().join(&asset.name);
     //let tmp_tarball_path = dir_name.path().join(&asset.name);
 
@@ -135,8 +134,25 @@ fn update_for_new() -> Result<(), Box<dyn std::error::Error>> {
     println!("[new_exe]: {:?}", new_exe);
     self_replace::self_replace(new_exe)?;
 
+    try_decompress_tar(extract_target);
     println!("end");
-    uncompress::Uncompresser::try_decompress_tar("target".to_owned());
+    Ok(())
+}
+
+pub fn try_decompress_tar(target: &Path) -> Result<(), Box<dyn std::error::Error>> {
+    use tar::Archive;
+    use flate2::read::GzDecoder;
+
+    let path = target.clone();
+    println!("[decompress target] {:?}", target);
+
+    let tar_gz = File::open(path)?;
+    let tar = GzDecoder::new(tar_gz);
+    let mut archive = Archive::new(tar);
+    archive.unpack(".")?;
+
+    println!("[success decompress] {:?}", target);
+
     Ok(())
 }
 
@@ -165,12 +181,9 @@ fn update_this() -> Result<(), Box<dyn (std::error::Error)>> {
 
     match x {
         1 => {
-            println!("this input is 1");
             update();
         }
-
         2 => {
-            println!("this input is 2");
             update_for_new();
         }
 
