@@ -54,7 +54,7 @@ pub mod update {
             dbg!("Download...");
 
             let archive_path = std::path::Path::new("./downloaded_archive.tar.gz");
-            try_decompress_tar(archive_path);
+            extract_archive(archive_path);
 
         } else {
             dbg!("Reqwest error:  {}", responce.status());
@@ -63,7 +63,7 @@ pub mod update {
         Ok(())
     }
 
-    pub fn try_decompress_tar(target: &Path) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn extract_archive(target: &Path) -> Result<(), Box<dyn std::error::Error>> {
         use flate2::read::GzDecoder;
         use tar::Archive;
 
