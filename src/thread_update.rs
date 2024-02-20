@@ -36,9 +36,8 @@ pub mod thread_update {
             dbg!("check for updates...");
 
             let upd_receive = true;
-            
+
             // send to main thr
-            
 
             thread::spawn(move || loop {
                 dbg!("thread_update_main");

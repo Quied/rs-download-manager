@@ -9,6 +9,7 @@ pub mod update {
     use self_replace::*;
     use serde_json::Value;
     use std::env::consts::EXE_EXTENSION;
+    use std::process::{Command, exit};
     use std::sync::mpsc::channel;
     use std::thread;
 
@@ -164,12 +165,23 @@ pub mod update {
         let tar_gz = File::open(path)?;
         let tar = GzDecoder::new(tar_gz);
         let mut archive = Archive::new(tar);
-        
+
         archive.unpack(".")?;
 
         std::fs::remove_file(target)?;
-        
+
+        let exe_path = "./hydraulics_app";
+        let dir_path = ".";
+        let _ = Command::new(exe_path)
+            .current_dir(dir_path)
+            .spawn()
+            .expect("Failed to execute command");
+
+        // Exit the current program
+
         println!("[success decompressed] {:?}", target);
+
+        exit(0);
         Ok(())
     }
 }

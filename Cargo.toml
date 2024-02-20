@@ -48,7 +48,7 @@ crossbeam-utils = "0.8.19"
 
 [features]
 tar = ["dep:tar"]
-default = ["reqwest/default-tls"]
+#default = ["reqwest/default-tls"]
 archive-zip = ["zip", "zipsign-api?/verify-zip"]
 compression-zip-bzip2 = ["archive-zip", "zip/bzip2"]
 compression-zip-deflate = ["archive-zip", "zip/deflate"]
@@ -56,6 +56,8 @@ archive-tar = ["tar", "zipsign-api?/verify-tar"]
 compression-flate2 = ["archive-tar", "flate2", "either"]
 rustls = ["reqwest/rustls-tls"]
 signatures = ["dep:zipsign-api"]
+
+default = ["tar", "flate2", "reqwest/default-tls"]
 
 [package.metadata.docs.rs]
 # Whether to pass `--all-features` to Cargo (default: false)

@@ -18,7 +18,6 @@ pub enum Msg2BackendThread {
 struct MyApp {
     update_status: UpdateStatus,
     is_new_update: bool,
-
 }
 
 impl Default for MyApp {
@@ -41,7 +40,6 @@ pub fn draw_download_window(is_new_update: &mut bool, ctx: &egui::Context) {
             ui.vertical(|ui| {
                 ui.add(egui::Label::new("Download it?"));
 
-    
                 ui.horizontal(|ui| {
                     if ui.button("No").clicked() {
                         println!("close window");
