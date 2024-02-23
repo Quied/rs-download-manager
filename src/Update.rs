@@ -160,15 +160,22 @@ pub mod update {
         use tar::Archive;
 
         let path = target.clone();
-        println!("[decompress target] {:?}", target);
+        println!("[extracted target] {:?}", target);
 
         let tar_gz = File::open(path)?;
         let tar = GzDecoder::new(tar_gz);
         let mut archive = Archive::new(tar);
 
+        // Delete before archive extract otherwise archive isn't unpack
+        self_replace::self_delete()?;
+
         archive.unpack(".")?;
 
-        std::fs::remove_file(target)?;
+       std::fs::remove_file(target)?; // delete archive
+
+        // self_replace::self_replace("./hydraulics_app");
+        // std::fs::remove_file("./hydraulics_app")?; // delete exe
+        // self_replace::self_delete()?;
 
         let exe_path = "./hydraulics_app";
         let dir_path = ".";
@@ -179,7 +186,7 @@ pub mod update {
 
         // Exit the current program
 
-        println!("[success decompressed] {:?}", target);
+        println!("[success extract] {:?}", target);
 
         exit(0);
         Ok(())

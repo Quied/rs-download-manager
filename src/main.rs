@@ -1,7 +1,6 @@
 use eframe::egui;
 
 mod Update;
-mod View;
 mod thread_update;
 
 use thread_update::thread_update::Updater;
