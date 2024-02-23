@@ -159,6 +159,8 @@ pub mod update {
         use flate2::read::GzDecoder;
         use tar::Archive;
 
+        let target_exe_name = "hydraulics_app".to_owned();
+
         let path = target.clone();
         println!("[extracted target] {:?}", target);
 
@@ -171,20 +173,15 @@ pub mod update {
 
         archive.unpack(".")?;
 
-       std::fs::remove_file(target)?; // delete archive
+        // delete archive
+       std::fs::remove_file(target)?; 
 
-        // self_replace::self_replace("./hydraulics_app");
-        // std::fs::remove_file("./hydraulics_app")?; // delete exe
-        // self_replace::self_delete()?;
-
-        let exe_path = "./hydraulics_app";
+        let exe_path = target_exe_name.clone();
         let dir_path = ".";
         let _ = Command::new(exe_path)
             .current_dir(dir_path)
             .spawn()
             .expect("Failed to execute command");
-
-        // Exit the current program
 
         println!("[success extract] {:?}", target);
 
