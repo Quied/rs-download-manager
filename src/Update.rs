@@ -1,6 +1,8 @@
 pub mod update {
     use std::fs::{set_permissions, File, OpenOptions};
     use std::path::Path;
+    use std::env;
+    
     use std::{
         fs,
         io::{stdin, Read},
@@ -9,7 +11,7 @@ pub mod update {
     use self_replace::*;
     use serde_json::Value;
     use std::env::consts::EXE_EXTENSION;
-    use std::process::{Command, exit};
+    use std::process::{exit, Command};
     use std::sync::mpsc::channel;
     use std::thread;
 
@@ -159,6 +161,21 @@ pub mod update {
         use flate2::read::GzDecoder;
         use tar::Archive;
 
+        let exe = std::env::current_exe().unwrap();
+        // let new_exe = std::fs::read_link(exe.clone())
+        //     .unwrap_or(exe)
+        //     .with_file_name("target")
+        //     .with_extension(EXE_EXTENSION);
+
+        let new_exe = "./extracted/hydraulics_app".to_owned();
+
+            // if !new_exe.is_file(){
+            //     println!("replace error it's not a file");
+            // }
+            // else {
+            //     self_replace::self_replace(&new_exe).unwrap();
+            // }
+
         let target_exe_name = "hydraulics_app".to_owned();
 
         let path = target.clone();
@@ -169,19 +186,23 @@ pub mod update {
         let mut archive = Archive::new(tar);
 
         // Delete before archive extract otherwise archive isn't unpack
-        self_replace::self_delete()?;
+        
 
-        archive.unpack(".")?;
+        let extract_archive_path = "./extracted".to_owned();
+        archive.unpack(&extract_archive_path)?;
+
+        // self_replace::self_replace("/extracted/hydraulics_app")?;
+        self_replace::self_replace(new_exe.clone())?;
 
         // delete archive
-       std::fs::remove_file(target)?; 
+        std::fs::remove_file(target)?;
 
-        let exe_path = target_exe_name.clone();
-        let dir_path = ".";
-        let _ = Command::new(exe_path)
-            .current_dir(dir_path)
-            .spawn()
-            .expect("Failed to execute command");
+        // let exe_path = target_exe_name.clone();
+        // let dir_path = ".";
+        // let _ = Command::new(exe_path)
+        //     .current_dir(dir_path)
+        //     .spawn()
+        //     .expect("Failed to execute command");
 
         println!("[success extract] {:?}", target);
 
